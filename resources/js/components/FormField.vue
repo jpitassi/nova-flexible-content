@@ -22,7 +22,7 @@
                     :errors="errors"
                     @move-up="moveUp(group.key)"
                     @move-down="moveDown(group.key)"
-                    @remove="remove(group.key)"
+                    @remove="remove(group)"
                 />
             </div>
 
@@ -214,16 +214,19 @@ export default {
         /**
          * Remove a group
          */
-        remove(key) {
-            let index = this.order.indexOf(key);
+        remove(group) {
+            let index = this.order.indexOf(group.key);
 
             if(index < 0) return;
 
-            this.order.splice(index, 1);
-            delete this.groups[key];
+            if (confirm('Are you sure you want to remove this "' + group.title + '"?')) {
+                this.order.splice(index, 1);
+                delete this.groups[group.key];
 
-            if (this.limitCounter >= 0) {
-                this.limitCounter++;
+                if (this.limitCounter >= 0) {
+                    this.limitCounter++;
+                }
+
             }
         }
     }

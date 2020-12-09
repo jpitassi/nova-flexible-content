@@ -28346,16 +28346,18 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         /**
          * Remove a group
          */
-        remove: function remove(key) {
-            var index = this.order.indexOf(key);
+        remove: function remove(group) {
+            var index = this.order.indexOf(group.key);
 
             if (index < 0) return;
 
-            this.order.splice(index, 1);
-            delete this.groups[key];
+            if (confirm('Are you sure you want to remove this "' + group.title + '"?')) {
+                this.order.splice(index, 1);
+                delete this.groups[group.key];
 
-            if (this.limitCounter >= 0) {
-                this.limitCounter++;
+                if (this.limitCounter >= 0) {
+                    this.limitCounter++;
+                }
             }
         }
     }
@@ -28598,7 +28600,7 @@ var render = function() {
                         return _vm.moveDown(group.key)
                       },
                       remove: function($event) {
-                        return _vm.remove(group.key)
+                        return _vm.remove(group)
                       }
                     }
                   })
