@@ -62,8 +62,9 @@
                 <div class="leading-normal py-1 px-8"
                     :class="{'border-b border-40': !collapsed}">
                     <p class="text-80">
-                      <span class="mr-4 font-semibold">#{{ index + 1 }}</span>
-                      {{ group.title }}
+                      <span class="font-semibold">#{{ index + 1 }}</span>
+                      <strong class="mr-4">{{ group.title }}: </strong>
+                      {{ title }}
                     </p>
                 </div>
             </div>
@@ -86,6 +87,9 @@
 </template>
 
 <script>
+const strip_tags = require('strip_tags');
+const truncate = require('truncate');
+
 import { BehavesAsPanel } from 'laravel-nova';
 
 export default {
@@ -102,6 +106,22 @@ export default {
     },
 
     computed: {
+        title() {
+            let label = null;
+            for (let f = 0; f < this.group.fields.length; f++) {
+                switch (this.group.fields[f].name) {
+                    case 'Label':
+                    case 'Text':
+                        label = this.group.fields[f].value;
+                        break;
+                }
+            }
+
+            return label
+                ? truncate(strip_tags(label), 60) || "New"
+                : this.group.title;
+        },
+
         titleStyle() {
             let classes = ['border-t', 'border-r', 'border-60', 'rounded-tr-lg'];
             if (this.collapsed) {
